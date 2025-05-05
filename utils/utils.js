@@ -1,6 +1,8 @@
 export const sendResponse = (res, statusCode, payload) => {
     res.statusCode = statusCode;
     res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-control-Allow-Origin', '*');
+    res.setHeader('Access-control-Allow-methods', 'GET');
     res.end(JSON.stringify(payload));
 }
 
@@ -24,13 +26,30 @@ export const filterData = (req, res, destinationArray,  filterKey) =>
 }
 
 export const filterQueryParam = (res, destinationArray, searchParams) => {
+  const filterData = destinationArray.filter(data =>
+    Object.entries(searchParams).every(([key, value]) => {
+      const dataValue = data[key];
 
-    const filterData = destinationArray.filter( data => 
-        Object.entries(searchParams).every(([key, value]) => 
-        data[key] && data[key].toLowerCase() === value.toLowerCase()
-        )
-    )
+      // Handle string comparison (case-insensitive)
+      if (typeof dataValue === 'string' && typeof value === 'string') {
+        return dataValue.toLowerCase() === value.toLowerCase();
+      }
 
-    sendResponse(res, 200, filterData);
+      // Convert value to the same type if necessary for loose comparison
+      if (typeof dataValue === 'boolean') {
+        // 'true'/'false' string to boolean
+        return dataValue === (value === 'true');
+      }
 
-}
+      if (typeof dataValue === 'number') {
+        // Try to parse string to number before comparing
+        return dataValue === Number(value);
+      }
+
+      // Fallback to strict equality
+      return dataValue === value;
+    })
+  );
+
+  sendResponse(res, 200, filterData);
+};

@@ -24,7 +24,12 @@ const server = http.createServer( async (req, res) => {
     {
         if(urlObj.search !== '')
         {
-            filterQueryParam(res, destinations, Object.fromEntries(urlObj.searchParams));
+            const filterData = filterQueryParam(res, destinations, Object.fromEntries(urlObj.searchParams));
+
+            console.log(filterData);
+
+            // sendResponse(res, 200, filterData);
+
         }
         else
         {
