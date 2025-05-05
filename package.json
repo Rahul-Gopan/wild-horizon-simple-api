@@ -1,0 +1,16 @@
+{
+  "name": "wild-horizons",
+  "version": "1.0.0",
+  "description": "A dataset of planet's most interesting places",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rahul Gopan",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
